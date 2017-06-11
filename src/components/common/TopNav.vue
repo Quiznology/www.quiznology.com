@@ -2,9 +2,9 @@
   <nav class="nav has-shadow">
   <div class="container">
     <div class="nav-left">
-      <router-link class="nav-item" to="/">
+      <router-link id="top-nav-title" class="nav-item" to="/">
         <img src="../../assets/logo.png" alt="Vue logo">
-        <b>QUIZ</b>nology
+        <span alt="Quiznology"><b>QUIZ</b>nology</span>
       </router-link>
       <router-link class="nav-item is-tab is-hidden-mobile" to="/">Home</router-link>
       <router-link class="nav-item is-tab is-hidden-mobile" to="/about">About</router-link>
@@ -17,13 +17,15 @@
     <div class="nav-right nav-menu">
       <router-link class="nav-item is-tab is-hidden-tablet is-active" to="/">Home</router-link>
       <router-link class="nav-item is-tab is-hidden-tablet" to="/about">About</router-link>
-      <a class="nav-item is-tab">
+      <a class="nav-item is-tab" v-if="userData">
         <figure class="image is-16x16" style="margin-right: 8px;">
           <img src="http://bulma.io/images/jgthms.png">
         </figure>
-        Profile
+        {{userData.login}}
       </a>
-      <a class="nav-item is-tab">Log out</a>
+      <a class="nav-item is-tab">Sign up</a>
+      <router-link v-if="!isLoggedIn" class="nav-item is-tab" to="/login">Log in</router-link>
+      <a class="nav-item is-tab" v-if="isLoggedIn" @click.prevent="logout()" >Log out</a>
     </div>
   </div>
 </nav>
@@ -32,5 +34,26 @@
 <script>
   export default {
     name: 'top-nav',
+    data() {
+      return {
+        user: {},
+      };
+    },
+    methods: {
+      logout() {
+        this.$auth.logout();
+        this.$store.dispatch('logout').then(() => {
+          this.$router.replace('/login');
+        });
+      },
+    },
+    computed: {
+      isLoggedIn() {
+        return this.$store.getters.isAuthenticated;
+      },
+      userData() {
+        return this.$store.getters.userInfo;
+      },
+    },
   };
 </script>

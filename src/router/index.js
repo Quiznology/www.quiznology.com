@@ -1,21 +1,42 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Hello from '@/views/Hello';
+import Landing from '@/views/Landing';
 import About from '@/views/About';
+import Login from '@/views/Login';
 
 Vue.use(Router);
 
 export default new Router({
+  hashbang: false,
+  mode: 'history',
   routes: [
     {
       path: '/',
-      name: 'Hello',
-      component: Hello,
+      name: 'Landing',
+      component: Landing,
     },
     {
       path: '/about',
       name: 'About',
       component: About,
+      access: {
+        requiresLogin: true,
+      },
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: Login,
+    },
+    {
+      path: '/auth/callback',
+      component: {
+        template: '<div class="auth-component"></div>',
+      },
+    },
+    {
+      path: '*',
+      redirect: '/',
     },
   ],
 });
